@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "declaration": true
+  },
+  "include": ["lib/*.ts", "**/*.js", "cds-plugin.ts"],
+  "exclude": ["node_modules","dist"]
+}
