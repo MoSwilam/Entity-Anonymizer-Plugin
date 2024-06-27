@@ -20,7 +20,7 @@ cds.on('served', async (srv) => {
         }
 
         // Anonymize only the elements that are annotated
-        for (const [key, element] of Object.keys(elements)) {
+        for (const [key, element] of Object.entries(elements)) {
           if (element[ANNOTATION]) {
             anonymizeElement(each, key);
           }
