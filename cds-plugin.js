@@ -1,18 +1,43 @@
 const cds = require('@sap/cds');
 
-const ANNOTATE_ANONYMIZE = '@dbg.anonymize';
-const log = cds.log('remote-srv');
+const ANNOTATION = '@dbg.anonymize';
+const log = cds.log('entity-anonymizer-plugin');
 
-cds.on('served', (srv)=> {
-  if (!srv instanceof cds.ApplicationService) return;
+cds.on('served', async (srv) => {
+  // Iterate over all services
+  for (const serviceName in cds.services) {
+    const srv = cds.services[serviceName];
+    
+    if (srv && typeof srv.after === 'function') {
 
-  for (const [entityName, entity] of Object.entries(srv.entities)) {
-    log(`Entity: ${entityName}`);
+      srv.after('READ', '*', (each, req) => {
+        const entity = req.target;
+        const elements = entity.elements;
 
-    for (const [elementName, element] of Object.entries(entity.elements)) {
-      if (element[ANNOTATE_ANONYMIZE]) {
-        log(`  - Element: ${elementName}`);
-      }
+        // Anonymize all elements of the entity if the entity itself is annotated
+        if (entity[ANNOTATION]) {
+          return anonymizeAllEntityElements(each, elements);
+        }
+
+        // Anonymize only the elements that are annotated
+        for (const [key, element] of Object.keys(elements)) {
+          if (element[ANNOTATION]) {
+            anonymizeElement(each, key);
+          }
+        }
+      });
+
     }
   }
 });
+
+function anonymizeAllEntityElements(record, elements) {
+  for (const [key, element] of Object.entries(elements)) {
+    anonymizeElement(record, key);
+  }
+}
+
+
+function anonymizeElement(record, key) {
+  record[key] = '**********';
+}

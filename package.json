@@ -1,7 +1,7 @@
 {
   "name": "entity-anonymizer-plugin",
   "version": "1.0.0",
-  "description": "A simple CAP project.",
+  "description": "Anonymizes data in a CDS entity.",
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
@@ -15,6 +15,7 @@
     "eslint": "^9"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "watch": "cds watch"
   }
 }

@@ -1,6 +1,6 @@
 # CAP Anonymizer Plugin
 
-A CAP (Cloud Application Programming) plugin designed to anonymize fields based on specific annotations. This plugin replaces sensitive property names on entities with generic values, ensuring data privacy and security.
+A CAP (Cloud Application Programming) plugin designed to anonymize fields based on `@dbg.anonymize` annotations. This plugin replaces sensitive property names on entities with generic values, ensuring data privacy and security.
 
 ## Features
 
@@ -17,4 +17,4 @@ A CAP (Cloud Application Programming) plugin designed to anonymize fields based 
 
 ### Installation
 
-1. Install it as an npm package using the Github repo URL
+1. Install the plugin as an npm package using the Github repo URL
