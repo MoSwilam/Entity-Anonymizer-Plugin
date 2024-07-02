@@ -5,13 +5,21 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
+  "main": "cds-plugin.js",
   "dependencies": {
+    "@fourlights/mapper": "^1.4.0",
+    "@fourlights/mapper-plugin-anonymize": "^1.5.0",
+    "@sap-cloud-sdk/http-client": "^3.16.0",
+    "@sap-cloud-sdk/resilience": "^3.16.0",
     "@sap/cds": "^7",
     "express": "^4"
   },
+  "files": [
+    "db",
+    "srv"
+  ],
   "devDependencies": {
     "@cap-js/sqlite": "^1",
-    "@sap/eslint-plugin-cds": "^3",
     "eslint": "^9"
   },
   "scripts": {
