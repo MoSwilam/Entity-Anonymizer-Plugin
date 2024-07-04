@@ -1,8 +1,7 @@
 const cds = require('@sap/cds');
 const { anonymizeEntity, anonymizeElements } = require('./lib/anonymize');
+const { ANNOTATION, log } = require('./lib/constants');
 
-const ANNOTATION = '@dbg.anonymize';
-const log = cds.log('entity-anonymizer-plugin');
 
 cds.on('serving', async (srv) => {
   if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
