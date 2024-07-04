@@ -1,39 +1,36 @@
 const cds = require('@sap/cds');
+const { anonymizeEntity, anonymizeElements } = require('./lib/anonymize');
 
 const ANNOTATION = '@dbg.anonymize';
 const log = cds.log('entity-anonymizer-plugin');
 
 cds.on('serving', async (srv) => {
-  // Iterate over all services
-
-  srv.after('READ', '*', (each, req) => {
-      const entity = req.target;
-      const elements = entity.elements;
-
-      log.info(`Anonymizing entity ${entity.name}`);
-
-      // Anonymize all elements of the entity if the entity itself is annotated
-      if (entity[ANNOTATION]) {
-        return anonymizeAllEntityElements(each, elements);
-      }
-
-      // Anonymize only the elements that are annotated
-      for (const [key, element] of Object.entries(elements)) {
-        if (element[ANNOTATION]) {
-          anonymizeElement(each, key);
-        }
-      }
-
-  });
-});
-
-function anonymizeAllEntityElements(record, elements) {
-  for (const [key, element] of Object.entries(elements)) {
-    anonymizeElement(record, key);
+  if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
+    log.warn('Anonymization is disabled in production environment');
+    return;
   }
-}
 
-
-function anonymizeElement(record, key) {
-  record[key] = '**********';
-}
+  if (!srv instanceof cds.ApplicationService) {
+    throw new Error('Invalid cds service object');
+  }
+  
+  const entities = srv.entities;
+  for (const [entityName, entity] of Object.entries(entities)) {
+    // Check for entity-level annotations
+    if (entity[ANNOTATION]) {
+      srv.after('READ', entityName, (plainResponseItems) => {
+        log.info(`Anonymizing data for entity: ${entityName}`);
+        anonymizeEntity(plainResponseItems, entity);
+      });
+    } else {
+      // Check for element-level annotations
+      const elementsWithAnnotation = Object.values(entity.elements).some(element => element[ANNOTATION]);
+      if (elementsWithAnnotation) {
+        srv.after('READ', entityName, (plainResponseItems) => {
+          log.info(`Anonymizing elements for entity: ${entityName}`);
+          anonymizeElements(plainResponseItems, entity);
+        });
+      }
+    }
+  }
+});
