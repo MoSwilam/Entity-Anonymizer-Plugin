@@ -1,5 +1,6 @@
 const cds = require('@sap/cds');
 const { anonymizeEntity, anonymizeElements } = require('./lib/anonymize');
+const { anonymizeEntityWithSeeding } = require('./lib/anonymize-with-seeding');
 const { ANNOTATION, log } = require('./lib/constants');
 
 
@@ -19,7 +20,7 @@ cds.on('serving', async (srv) => {
     if (entity[ANNOTATION]) {
       srv.after('READ', entityName, (plainResponseItems) => {
         log.info(`Anonymizing data for entity: ${entityName}`);
-        anonymizeEntity(plainResponseItems, entity);
+        anonymizeEntityWithSeeding(plainResponseItems, entity);
       });
     } else {
       // Check for element-level annotations
