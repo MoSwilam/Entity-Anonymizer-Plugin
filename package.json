@@ -16,8 +16,8 @@
     "express": "^4"
   },
   "files": [
-    "db",
-    "srv"
+    "cds-plugin.js",
+    "lib/"
   ],
   "devDependencies": {
     "@cap-js/sqlite": "^1",
