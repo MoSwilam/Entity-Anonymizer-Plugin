@@ -1,11 +1,11 @@
 const cds = require('@sap/cds');
 const { anonymizeEntity, anonymizeElements } = require('./lib/anonymize');
-const { anonymizeEntityWithSeeding } = require('./lib/anonymize-with-seeding');
+const { anonymizeEntityWithSeeding, anonymizeElementsWithSeeding } = require('./lib/anonymize-with-seeding');
 const { ANNOTATION, log } = require('./lib/constants');
-
+require('dotenv').config();
 
 cds.on('serving', async (srv) => {
-  if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     log.warn('Anonymization is disabled in production environment');
     return;
   }
@@ -20,7 +20,7 @@ cds.on('serving', async (srv) => {
     if (entity[ANNOTATION]) {
       srv.after('READ', entityName, (plainResponseItems) => {
         log.info(`Anonymizing data for entity: ${entityName}`);
-        anonymizeEntityWithSeeding(plainResponseItems, entity);
+        anonymizeEntity(plainResponseItems, entity);
       });
     } else {
       // Check for element-level annotations
