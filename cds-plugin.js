@@ -6,20 +6,17 @@ require('dotenv').config();
 
 cds.on('serving', async (srv) => {
   if (process.env.NODE_ENV === 'production') {
-    log.warn('Anonymization is disabled in production environment');
+    log.info('Anonymization is disabled in production environment');
     return;
   }
 
-  if (!srv instanceof cds.ApplicationService) {
-    throw new Error('Invalid cds service object');
-  }
+  if (!srv instanceof cds.ApplicationService) return;
   
   const entities = srv.entities;
   for (const [entityName, entity] of Object.entries(entities)) {
     // Check for entity-level annotations
     if (entity[ANNOTATION]) {
       srv.after('READ', entityName, (plainResponseItems) => {
-        log.info(`Anonymizing data for entity: ${entityName}`);
         anonymizeEntity(plainResponseItems, entity);
       });
     } else {
@@ -27,7 +24,6 @@ cds.on('serving', async (srv) => {
       const elementsWithAnnotation = Object.values(entity.elements).some(element => element[ANNOTATION]);
       if (elementsWithAnnotation) {
         srv.after('READ', entityName, (plainResponseItems) => {
-          log.info(`Anonymizing elements for entity: ${entityName}`);
           anonymizeElements(plainResponseItems, entity);
         });
       }
