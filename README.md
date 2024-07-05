@@ -26,7 +26,7 @@ A CAP (Cloud Application Programming) plugin designed to anonymize fields based 
 1. Install the plugin as an npm package using the Github repo URL
 
 ```sh
-npm install <Github repo>
+npm install <Github repo URL>
 ```
 
 <br>
